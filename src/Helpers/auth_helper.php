@@ -1,6 +1,6 @@
 <?php
 
-use Sparks\Shield\Auth;
+use CodeIgniter\Shield\Auth;
 
 if (! function_exists('auth')) {
     /**
@@ -21,7 +21,7 @@ if (! function_exists('user_id')) {
      * Returns the ID for the current logged in user.
      * Note: For \CodeIgniter\Shield\Entities\User this will always return an int.
      *
-     * @return mixed|null
+     * @return int|string|null
      */
     function user_id()
     {

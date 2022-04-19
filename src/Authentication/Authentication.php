@@ -10,6 +10,8 @@ class Authentication
     /**
      * Instantiated handler objects,
      * stored by handler alias.
+     *
+     * @var array<string, AuthenticatorInterface> [handler_alias => handler_instance]
      */
     protected array $instances = [];
 
@@ -29,10 +31,8 @@ class Authentication
      * in the Auth config file.
      *
      * @throws AuthenticationException
-     *
-     * @return AuthenticatorInterface
      */
-    public function factory(?string $handler = null)
+    public function factory(?string $handler = null): AuthenticatorInterface
     {
         // Determine actual handler name
         $handler ??= $this->config->defaultAuthenticator;
@@ -49,7 +49,7 @@ class Authentication
 
         $className = $this->config->authenticators[$handler];
 
-        assert($this->userProvider !== null, '$userProvider must be set.');
+        assert($this->userProvider !== null, 'You must set $this->userProvider.');
 
         $this->instances[$handler] = new $className($this->userProvider);
 

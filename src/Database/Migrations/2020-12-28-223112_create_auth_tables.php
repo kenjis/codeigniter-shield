@@ -6,7 +6,7 @@ use CodeIgniter\Database\Migration;
 
 class CreateAuthTables extends Migration
 {
-    public function up()
+    public function up(): void
     {
         // Users
         $this->forge->addField([
@@ -331,7 +331,7 @@ class CreateAuthTables extends Migration
 
     //--------------------------------------------------------------------
 
-    public function down()
+    public function down(): void
     {
         $prefix = $this->db->getPrefix();
         $prefix = empty($prefix) ? $prefix : $prefix . '_';

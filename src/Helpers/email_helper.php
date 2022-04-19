@@ -1,11 +1,13 @@
 <?php
 
+use CodeIgniter\Email\Email;
+
 if (! defined('emailer')) {
     /**
      * Provides convenient access to the main Auth class
      * for CodeIgniter Shield.
      */
-    function emailer(?array $overrides = null)
+    function emailer(?array $overrides = null): Email
     {
         helper('setting');
 
