@@ -1,13 +1,18 @@
 <?php
 
+use Sparks\Shield\Auth;
+
 if (! function_exists('auth')) {
     /**
      * Provides convenient access to the main Auth class
      * for CodeIgniter Shield.
      */
-    function auth(?string $authenticator = null)
+    function auth(?string $authenticator = null): Auth
     {
-        return service('auth')->setHandler($authenticator);
+        /** @var Auth $auth */
+        $auth = service('auth');
+
+        return $auth->setHandler($authenticator);
     }
 }
 
@@ -20,6 +25,9 @@ if (! function_exists('user_id')) {
      */
     function user_id()
     {
-        return service('auth')->id();
+        /** @var Auth $auth */
+        $auth = service('auth');
+
+        return $auth->id();
     }
 }

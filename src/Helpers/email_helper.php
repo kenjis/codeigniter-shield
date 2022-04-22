@@ -36,7 +36,9 @@ if (! defined('emailer')) {
             $config = array_merge($overrides, $config);
         }
 
-        return service('email')
-            ->initialize($config);
+        /** @var Email $email */
+        $email = service('email');
+
+        return $email->initialize($config);
     }
 }

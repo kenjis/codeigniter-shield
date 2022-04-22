@@ -2,7 +2,9 @@
 
 namespace CodeIgniter\Shield\Authentication\Passwords;
 
+use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\Shield\Entities\User;
+use CodeIgniter\Shield\Authentication\Passwords;
 
 /**
  * Class ValidationRules
@@ -61,7 +63,10 @@ class ValidationRules
     {
         $fields = $this->prepareValidFields();
 
-        $data = service('request')->getPost($fields);
+        /** @var IncomingRequest $request */
+        $request = service('request');
+
+        $data = $request->getPost($fields);
 
         return new User($data);
     }
