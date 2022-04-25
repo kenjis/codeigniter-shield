@@ -47,7 +47,7 @@ class RegisterController extends BaseController
                 ->with('error', lang('Auth.registerDisabled'));
         }
 
-        $users = $this->getUserProvider();
+        $provider = $this->getUserProvider();
 
         // Validate here first, since some things,
         // like the password, can only be validated properly here.
@@ -66,18 +66,18 @@ class RegisterController extends BaseController
 
         $user->fill($this->request->getPost($allowedPostFields));
 
-        if (! $users->save($user)) {
-            return redirect()->back()->withInput()->with('errors', $users->errors());
+        if (! $provider->save($user)) {
+            return redirect()->back()->withInput()->with('errors', $provider->errors());
         }
 
         // Get the updated user so we have the ID...
-        $user = $users->find($users->getInsertID());
+        $user = $provider->find($provider->getInsertID());
 
         // Store the email/password identity for this user.
         $user->createEmailIdentity($this->request->getPost(['email', 'password']));
 
         // Add to default group
-        $users->addToDefaultGroup($user);
+        $provider->addToDefaultGroup($user);
 
         Events::trigger('didRegister', $user);
 
@@ -94,7 +94,7 @@ class RegisterController extends BaseController
 
         // Set the user active
         $user->active = true;
-        $users->save($user);
+        $provider->save($user);
 
         // Success!
         return redirect()->to(config('Auth')->registerRedirect())
