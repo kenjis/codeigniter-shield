@@ -116,18 +116,25 @@ class Auth
     {
         $authRoutes = config('AuthRoutes')->routes;
 
-        $routes->group('/', ['namespace' => 'CodeIgniter\Shield\Controllers'], static function (RouteCollection $routes) use ($authRoutes, $config) {
-            foreach ($authRoutes as $name => $row) {
-                if (! isset($config['except']) || (isset($config['except']) && ! array_key_exists($name, $config['except']))) {
-                    foreach ($row as $params) {
-                        $options = isset($params[3])
+        $routes->group(
+            '/',
+            ['namespace' => 'CodeIgniter\Shield\Controllers'],
+            static function (RouteCollection $routes) use ($authRoutes, $config) {
+                foreach ($authRoutes as $name => $row) {
+                    if (
+                        ! isset($config['except'])
+                        || (isset($config['except']) && ! array_key_exists($name, $config['except']))
+                    ) {
+                        foreach ($row as $params) {
+                            $options = isset($params[3])
                             ? ['as' => $params[3]]
                             : null;
-                        $routes->{$params[0]}($params[1], $params[2], $options);
+                            $routes->{$params[0]}($params[1], $params[2], $options);
+                        }
                     }
                 }
             }
-        });
+        );
     }
 
     /**
