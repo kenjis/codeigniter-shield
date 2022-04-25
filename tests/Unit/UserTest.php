@@ -48,7 +48,6 @@ final class UserTest extends TestCase
         $this->assertCount(1, $identities);
         $this->assertInstanceOf(UserIdentity::class, $identities[0]);
         $this->assertSame('access_token', $identities[0]->type);
-
         $this->assertEmpty($this->user->identitiesOfType('foo'));
     }
 
