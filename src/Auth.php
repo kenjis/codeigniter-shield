@@ -65,8 +65,7 @@ class Auth
      */
     public function getAuthenticator(): AuthenticatorInterface
     {
-        return $this->authenticate
-            ->factory($this->handler);
+        return $this->authenticate->factory($this->handler);
     }
 
     /**
@@ -86,15 +85,12 @@ class Auth
      */
     public function id()
     {
-        return ($user = $this->user())
-            ? $user->getAuthId()
-            : null;
+        return ($user = $this->user()) ? $user->getAuthId() : null;
     }
 
     public function authenticate(array $credentials): Result
     {
-        $response = $this->authenticate
-            ->factory($this->handler)
+        $response = $this->authenticate->factory($this->handler)
             ->attempt($credentials);
 
         if ($response->isOk()) {

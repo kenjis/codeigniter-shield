@@ -195,8 +195,7 @@ class User extends Entity implements \CodeIgniter\Shield\Interfaces\Authenticata
                 ->where('user_id', $this->attributes['id'] ?? null);
         }
 
-        return $logins
-            ->where('email', $this->getAuthEmail())
+        return $logins->where('email', $this->getAuthEmail())
             ->orderBy('date', 'desc')
             ->first();
     }

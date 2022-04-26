@@ -9,8 +9,7 @@ class Result
     protected bool $success = false;
 
     /**
-     * Provides a simple explanation of
-     * the error that happened.
+     * Provides a simple explanation of the error that happened.
      * Typically a single sentence.
      */
     protected ?string $reason = null;
