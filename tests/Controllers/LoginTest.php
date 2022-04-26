@@ -8,6 +8,7 @@ use CodeIgniter\Shield\Authentication\Actions\Email2FA;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
+use CodeIgniter\Shield\Models\UserIdentityModel;
 use Tests\Support\FakeUser;
 use Tests\Support\TestCase;
 
@@ -34,12 +35,23 @@ final class LoginTest extends TestCase
         Services::injectMock('routes', $routes);
     }
 
+    private function createEmailIdentity($userId, ?array $credentials = null)
+    {
+        if ($credentials === null) {
+            $credentials = ['email' => 'foo@example.com', 'password' => 'secret123'];
+        }
+
+        /** @var UserIdentityModel $identityModel */
+        $identityModel = model(UserIdentityModel::class);
+        $identityModel->createEmailIdentity(
+            $userId,
+            $credentials
+        );
+    }
+
     public function testLoginBadEmail()
     {
-        $this->user->createEmailIdentity([
-            'email'    => 'foo@example.com',
-            'password' => 'secret123',
-        ]);
+        $this->createEmailIdentity($this->user->id);
 
         $result = $this->post('/login', [
             'email'    => 'fooled@example.com',
@@ -63,10 +75,7 @@ final class LoginTest extends TestCase
 
     public function testLoginActionEmailSuccess()
     {
-        $this->user->createEmailIdentity([
-            'email'    => 'foo@example.com',
-            'password' => 'secret123',
-        ]);
+        $this->createEmailIdentity($this->user->id);
 
         $result = $this->post('/login', [
             'email'    => 'foo@example.com',
@@ -93,10 +102,7 @@ final class LoginTest extends TestCase
 
     public function testLoginActionUsernameSuccess()
     {
-        $this->user->createEmailIdentity([
-            'email'    => 'foo@example.com',
-            'password' => 'secret123',
-        ]);
+        $this->createEmailIdentity($this->user->id);
 
         $result = $this->post('/login', [
             'username' => $this->user->username,
@@ -142,10 +148,7 @@ final class LoginTest extends TestCase
         $config->actions['login'] = Email2FA::class;
         Factories::injectMock('config', 'Auth', $config);
 
-        $this->user->createEmailIdentity([
-            'email'    => 'foo@example.com',
-            'password' => 'secret123',
-        ]);
+        $this->createEmailIdentity($this->user->id);
 
         $result = $this->post('/login', [
             'email'    => 'foo@example.com',

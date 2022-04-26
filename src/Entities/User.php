@@ -96,27 +96,6 @@ class User extends Entity implements \CodeIgniter\Shield\Interfaces\Authenticata
     }
 
     /**
-     * Creates a new identity for this user with an email/password
-     * combination.
-     */
-    public function createEmailIdentity(array $credentials): void
-    {
-        /** @var UserIdentityModel $identityModel */
-        $identityModel = model(UserIdentityModel::class);
-
-        /** @var Passwords $passwords */
-        $passwords = service('passwords');
-
-        $identity = new UserIdentity([
-            'user_id' => $this->id,
-            'type'    => 'email_password',
-            'secret'  => $credentials['email'],
-            'secret2' => $passwords->hash($credentials['password']),
-        ]);
-        $identityModel->createIdentity($identity);
-    }
-
-    /**
      * Returns the user's Email/Password identity.
      */
     public function getEmailIdentity(): ?UserIdentity

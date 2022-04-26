@@ -45,7 +45,12 @@ final class ActionsTest extends TestCase
 
         $_SESSION = [];
 
-        $this->user->createEmailIdentity(['email' => 'johnsmith@example.com', 'password' => 'secret123']);
+        /** @var UserIdentityModel $identityModel */
+        $identityModel = model(UserIdentityModel::class);
+        $identityModel->createEmailIdentity(
+            $this->user->id,
+            ['email' => 'johnsmith@example.com', 'password' => 'secret123']
+        );
     }
 
     public function testActionShowNoneAvailable()

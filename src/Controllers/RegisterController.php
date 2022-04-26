@@ -9,6 +9,7 @@ use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Interfaces\Authenticatable;
 use CodeIgniter\Shield\Interfaces\UserProvider;
 use CodeIgniter\Validation\Validation;
+use CodeIgniter\Shield\Models\UserIdentityModel;
 
 /**
  * Class RegisterController
@@ -73,8 +74,11 @@ class RegisterController extends BaseController
         // Get the updated user so we have the ID...
         $user = $provider->find($provider->getInsertID());
 
+        /** @var UserIdentityModel $identityModel */
+        $identityModel = model(UserIdentityModel::class);
+
         // Store the email/password identity for this user.
-        $user->createEmailIdentity($this->request->getPost(['email', 'password']));
+        $identityModel->createEmailIdentity($user->id, $this->request->getPost(['email', 'password']));
 
         // Add to default group
         $provider->addToDefaultGroup($user);

@@ -62,13 +62,26 @@ final class MagicLinkTest extends TestCase
         $result->assertSessionHas('error', lang('Auth.invalidEmail'));
     }
 
+    private function createEmailIdentity($userId, ?array $credentials = null)
+    {
+        if ($credentials === null) {
+            $credentials = ['email' => 'foo@example.com', 'password' => 'secret123'];
+        }
+
+        /** @var UserIdentityModel $identityModel */
+        $identityModel = model(UserIdentityModel::class);
+        $identityModel->createEmailIdentity(
+            $userId,
+            $credentials
+        );
+    }
+
     public function testMagicLinkSubmitSuccess()
     {
-        /**
-         * @phpstan-var User
-         */
+        /** @phpstan-var User */
         $user = fake(UserModel::class);
-        $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret123']);
+
+        $this->createEmailIdentity($user->id);
 
         $result = $this->post(route_to('magic-link'), [
             'email' => 'foo@example.com',
@@ -93,12 +106,12 @@ final class MagicLinkTest extends TestCase
 
     public function testMagicLinkVerifyExpired()
     {
-        $identities = new UserIdentityModel();
-        /**
-         * @phpstan-var User
-         */
+        /** @phpstan-var User */
         $user = fake(UserModel::class);
-        $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret123']);
+
+        $this->createEmailIdentity($user->id);
+
+        $identities = new UserIdentityModel();
         $identities->insert([
             'user_id' => $user->id,
             'type'    => 'magic-link',
@@ -114,12 +127,12 @@ final class MagicLinkTest extends TestCase
 
     public function testMagicLinkVerifySuccess()
     {
-        $identities = new UserIdentityModel();
-        /**
-         * @phpstan-var User
-         */
+        /** @phpstan-var User */
         $user = fake(UserModel::class);
-        $user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret123']);
+
+        $this->createEmailIdentity($user->id);
+
+        $identities = new UserIdentityModel();
         $identities->insert([
             'user_id' => $user->id,
             'type'    => 'magic-link',

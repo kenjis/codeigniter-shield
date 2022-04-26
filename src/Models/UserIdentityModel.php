@@ -4,9 +4,9 @@ namespace CodeIgniter\Shield\Models;
 
 use CodeIgniter\Model;
 use CodeIgniter\Shield\Entities\AccessToken;
-use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Entities\UserIdentity;
 use Faker\Generator;
+use CodeIgniter\Shield\Authentication\Passwords;
 
 class UserIdentityModel extends Model
 {
@@ -33,6 +33,26 @@ class UserIdentityModel extends Model
     public function createIdentity(UserIdentity $identiy)
     {
         return $this->insert($identiy);
+    }
+
+    /**
+     * Creates a new identity for this user with an email/password
+     * combination.
+     *
+     * @param mixed $userId
+     */
+    public function createEmailIdentity($userId, array $credentials): void
+    {
+        /** @var Passwords $passwords */
+        $passwords = service('passwords');
+
+        $identity = new UserIdentity([
+            'user_id' => $userId,
+            'type'    => 'email_password',
+            'secret'  => $credentials['email'],
+            'secret2' => $passwords->hash($credentials['password']),
+        ]);
+        $this->createIdentity($identity);
     }
 
     public function getAccessTokenByRawToken(string $rawToken): ?AccessToken

@@ -13,6 +13,7 @@ use CodeIgniter\Shield\Result;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\Mock\MockEvents;
 use Config\Services;
+use CodeIgniter\Shield\Models\UserIdentityModel;
 use Tests\Support\FakeUser;
 use Tests\Support\TestCase;
 
@@ -59,9 +60,25 @@ final class SessionHandlerTest extends TestCase
         $this->assertSame($this->user->id, $authUser->getAuthId());
     }
 
+    private function createEmailIdentity($userId, ?array $credentials = null)
+    {
+        if ($credentials === null) {
+            $credentials = ['email' => 'foo@example.com', 'password' => 'secret'];
+        }
+
+        /** @var UserIdentityModel $identityModel */
+        $identityModel = model(UserIdentityModel::class);
+        $identityModel->createEmailIdentity(
+            $userId,
+            $credentials
+        );
+    }
+
     public function testLoginNoRemember()
     {
-        $this->user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret']);
+        $this->createEmailIdentity(
+            $this->user->id
+        );
 
         $this->assertTrue($this->auth->login($this->user));
 
@@ -74,7 +91,9 @@ final class SessionHandlerTest extends TestCase
 
     public function testLoginWithRemember()
     {
-        $this->user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret']);
+        $this->createEmailIdentity(
+            $this->user->id
+        );
 
         $this->assertTrue($this->auth->remember()->login($this->user));
 
@@ -91,7 +110,10 @@ final class SessionHandlerTest extends TestCase
 
     public function testLogout()
     {
-        $this->user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret']);
+        $this->createEmailIdentity(
+            $this->user->id
+        );
+
         $this->auth->remember()->login($this->user);
 
         $this->seeInDatabase('auth_remember_tokens', ['user_id' => $this->user->id]);
@@ -112,7 +134,9 @@ final class SessionHandlerTest extends TestCase
 
     public function testLoginById()
     {
-        $this->user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret']);
+        $this->createEmailIdentity(
+            $this->user->id
+        );
 
         $this->auth->loginById($this->user->id);
 
@@ -123,7 +147,9 @@ final class SessionHandlerTest extends TestCase
 
     public function testLoginByIdRemember()
     {
-        $this->user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret']);
+        $this->createEmailIdentity(
+            $this->user->id
+        );
 
         $this->auth->remember()->loginById($this->user->id);
 
@@ -134,7 +160,10 @@ final class SessionHandlerTest extends TestCase
 
     public function testForgetCurrentUser()
     {
-        $this->user->createEmailIdentity(['email' => 'foo@example.com', 'password' => 'secret']);
+        $this->createEmailIdentity(
+            $this->user->id
+        );
+
         $this->auth->remember()->loginById($this->user->id);
         $this->assertSame($this->user->id, $_SESSION['logged_in']);
 
@@ -181,10 +210,10 @@ final class SessionHandlerTest extends TestCase
 
     public function testCheckBadPassword()
     {
-        $this->user->createEmailIdentity([
-            'email'    => 'foo@example.com',
-            'password' => 'secret123',
-        ]);
+        $this->createEmailIdentity(
+            $this->user->id,
+            ['email' => 'foo@example.com', 'password' => 'secret123']
+        );
 
         $result = $this->auth->check([
             'email'    => $this->user->email,
@@ -198,10 +227,10 @@ final class SessionHandlerTest extends TestCase
 
     public function testCheckSuccess()
     {
-        $this->user->createEmailIdentity([
-            'email'    => 'foo@example.com',
-            'password' => 'secret123',
-        ]);
+        $this->createEmailIdentity(
+            $this->user->id,
+            ['email' => 'foo@example.com', 'password' => 'secret123']
+        );
 
         $result = $this->auth->check([
             'email'    => $this->user->email,
@@ -235,10 +264,10 @@ final class SessionHandlerTest extends TestCase
 
     public function testAttemptSuccess()
     {
-        $this->user->createEmailIdentity([
-            'email'    => 'foo@example.com',
-            'password' => 'secret123',
-        ]);
+        $this->createEmailIdentity(
+            $this->user->id,
+            ['email' => 'foo@example.com', 'password' => 'secret123']
+        );
 
         $this->assertArrayNotHasKey('logged_in', $_SESSION);
 
@@ -265,10 +294,10 @@ final class SessionHandlerTest extends TestCase
 
     public function testAttemptCaseInsensitive()
     {
-        $this->user->createEmailIdentity([
-            'email'    => 'FOO@example.com',
-            'password' => 'secret123',
-        ]);
+        $this->createEmailIdentity(
+            $this->user->id,
+            ['email' => 'FOO@example.com', 'password' => 'secret123']
+        );
 
         $this->assertArrayNotHasKey('logged_in', $_SESSION);
 
@@ -297,10 +326,11 @@ final class SessionHandlerTest extends TestCase
     {
         /** @var User $user */
         $user = fake(UserModel::class, ['username' => 'foorog']);
-        $user->createEmailIdentity([
-            'email'    => 'FOO@example.com',
-            'password' => 'secret123',
-        ]);
+
+        $this->createEmailIdentity(
+            $user->id,
+            ['email' => 'FOO@example.com', 'password' => 'secret123']
+        );
 
         $this->assertArrayNotHasKey('logged_in', $_SESSION);
 
