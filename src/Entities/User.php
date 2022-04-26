@@ -107,12 +107,13 @@ class User extends Entity implements \CodeIgniter\Shield\Interfaces\Authenticata
         /** @var Passwords $passwords */
         $passwords = service('passwords');
 
-        $identityModel->insert([
+        $identity = new UserIdentity([
             'user_id' => $this->id,
             'type'    => 'email_password',
             'secret'  => $credentials['email'],
             'secret2' => $passwords->hash($credentials['password']),
         ]);
+        $identityModel->createIdentity($identity);
     }
 
     /**

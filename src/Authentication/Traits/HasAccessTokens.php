@@ -3,6 +3,7 @@
 namespace CodeIgniter\Shield\Authentication\Traits;
 
 use CodeIgniter\Shield\Entities\AccessToken;
+use CodeIgniter\Shield\Entities\UserIdentity;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 
 /**
@@ -25,13 +26,14 @@ trait HasAccessTokens
         /** @var UserIdentityModel $identityModel */
         $identityModel = model(UserIdentityModel::class);
 
-        $identityModel->insert([
-            'type'    => 'access_token',
+        $identity = new UserIdentity([
             'user_id' => $this->id,
+            'type'    => 'access_token',
             'name'    => $name,
             'secret'  => hash('sha256', $rawToken = random_string('crypto', 64)),
             'extra'   => serialize($scopes),
         ]);
+        $identityModel->createIdentity($identity);
 
         /** @var AccessToken $token */
         $token = $identityModel

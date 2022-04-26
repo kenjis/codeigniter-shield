@@ -5,6 +5,7 @@ namespace CodeIgniter\Shield\Authentication\Actions;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Shield\Entities\UserIdentity;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 
 class EmailActivator implements ActionInterface
@@ -28,13 +29,14 @@ class EmailActivator implements ActionInterface
         helper('text');
         $code = random_string('nozero', 6);
 
-        $identityModel->insert([
+        $identity = new UserIdentity([
             'user_id' => $user->getAuthId(),
             'type'    => 'email_activate',
-            'secret'  => $code,
             'name'    => 'register',
+            'secret'  => $code,
             'extra'   => lang('Auth.needVerification'),
         ]);
+        $identityModel->createIdentity($identity);
 
         // Send the email
         helper('email');

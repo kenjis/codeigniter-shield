@@ -4,6 +4,7 @@ namespace CodeIgniter\Shield\Authentication\Actions;
 
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Shield\Entities\UserIdentity;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 
 /**
@@ -31,13 +32,14 @@ class Email2FA implements ActionInterface
         helper('text');
         $code = random_string('nozero', 6);
 
-        $identityModel->insert([
+        $identity = new UserIdentity([
             'user_id' => $user->getAuthId(),
             'type'    => 'email_2fa',
             'secret'  => $code,
             'name'    => 'login',
             'extra'   => lang('Auth.need2FA'),
         ]);
+        $identityModel->createIdentity($identity);
 
         return view(setting('Auth.views')['action_email_2fa']);
     }

@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Auth;
+use CodeIgniter\Shield\Entities\UserIdentity;
 use CodeIgniter\Shield\Interfaces\UserProvider;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 
@@ -66,12 +67,13 @@ class MagicLinkController extends BaseController
         helper('text');
         $token = random_string('crypto', 20);
 
-        $identityModel->insert([
+        $identity = new UserIdentity([
             'user_id' => $user->getAuthId(),
             'type'    => 'magic-link',
             'secret'  => $token,
             'expires' => Time::now()->addSeconds(setting('Auth.magicLinkLifetime'))->toDateTimeString(),
         ]);
+        $identityModel->createIdentity($identity);
 
         // Send the user an email with the code
         helper('email');

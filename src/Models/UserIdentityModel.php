@@ -4,6 +4,7 @@ namespace CodeIgniter\Shield\Models;
 
 use CodeIgniter\Model;
 use CodeIgniter\Shield\Entities\AccessToken;
+use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Entities\UserIdentity;
 use Faker\Generator;
 
@@ -25,6 +26,14 @@ class UserIdentityModel extends Model
         'last_used_at',
     ];
     protected $useTimestamps = true;
+
+    /**
+     * @param int|string $userId
+     */
+    public function createIdentity(UserIdentity $identiy)
+    {
+        return $this->insert($identiy);
+    }
 
     public function getAccessTokenByRawToken(string $rawToken): ?AccessToken
     {
