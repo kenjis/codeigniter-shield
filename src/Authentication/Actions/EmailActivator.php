@@ -65,8 +65,9 @@ class EmailActivator implements ActionInterface
      */
     public function verify(IncomingRequest $request)
     {
-        $token    = $request->getVar('token');
-        $user     = auth()->user();
+        $token = $request->getVar('token');
+        $user  = auth()->user();
+
         $identity = $user->getIdentity('email_activate');
 
         // No match - let them try again.

@@ -66,7 +66,8 @@ class Session implements AuthenticatorInterface
 
         $ipAddress = $request->getIPAddress();
         $userAgent = $request->getUserAgent();
-        $result    = $this->check($credentials);
+
+        $result = $this->check($credentials);
 
         if (! $result->isOK()) {
             // Always record a login attempt, whether success or not.
