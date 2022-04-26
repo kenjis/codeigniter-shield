@@ -3,7 +3,6 @@
 namespace CodeIgniter\Shield\Entities;
 
 use CodeIgniter\Entity\Entity;
-use CodeIgniter\Shield\Authentication\Passwords;
 use CodeIgniter\Shield\Authentication\Traits\Authenticatable;
 use CodeIgniter\Shield\Authentication\Traits\HasAccessTokens;
 use CodeIgniter\Shield\Authorization\Traits\Authorizable;

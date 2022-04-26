@@ -4,6 +4,8 @@ namespace CodeIgniter\Shield\Authorization\Traits;
 
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Authorization\AuthorizationException;
+use CodeIgniter\Shield\Authorization\Models\GroupModel;
+use CodeIgniter\Shield\Authorization\Models\PermissionModel;
 use Exception;
 
 trait Authorizable
@@ -297,12 +299,9 @@ trait Authorizable
             return;
         }
 
-        $groups = db_connect()->table('auth_groups_users')
-            ->where('user_id', $this->id)
-            ->get()
-            ->getResultArray();
+        $groupModel = model(GroupModel::class);
 
-        $this->groupCache = array_column($groups, 'group');
+        $this->groupCache = $groupModel->getByUserId($this->id);
     }
 
     /**
@@ -315,12 +314,9 @@ trait Authorizable
             return;
         }
 
-        $permissions = db_connect()->table('auth_permissions_users')
-            ->where('user_id', $this->id)
-            ->get()
-            ->getResultArray();
+        $permissionModel = model(PermissionModel::class);
 
-        $this->permissionsCache = array_column($permissions, 'permission');
+        $this->permissionsCache = $permissionModel->getByUserId($this->id);
     }
 
     /**
@@ -331,34 +327,26 @@ trait Authorizable
      */
     private function saveGroupsOrPermissions(string $type): void
     {
-        $table = $type === 'group'
-            ? 'auth_groups_users'
-            : 'auth_permissions_users';
-        $cache = $type === 'group'
+        $model = ($type === 'group')
+            ? model(GroupModel::class)
+            : model(PermissionModel::class);
+
+        $cache = ($type === 'group')
             ? $this->groupCache
             : $this->permissionsCache;
 
-        $existing = db_connect()->table($table)
-            ->where('user_id', $this->id)
-            ->get()
-            ->getResultArray();
-        $existing = array_column($existing, $type);
+        $existing = $model->getByUserId($this->id);
 
         $new = array_diff($cache, $existing);
 
         // Delete any not in the cache
         if (count($cache)) {
-            db_connect()->table($table)
-                ->where('user_id', $this->id)
-                ->whereNotIn($type, $cache)
-                ->delete();
+            $model->deleteNotIn($this->id, $cache);
         }
         // Nothing in the cache? Then make sure
         // we delete all from this user
         else {
-            db_connect()->table($table)
-                ->where('user_id', $this->id)
-                ->delete();
+            $model->deleteAll($this->id);
         }
 
         // Insert new ones
@@ -372,7 +360,7 @@ trait Authorizable
                     'created_at' => Time::now()->toDateTimeString(),
                 ];
             }
-            db_connect()->table($table)->insertBatch($inserts);
+            $model->insertBatch($inserts);
         }
     }
 }

@@ -5,10 +5,10 @@ namespace Tests\Controllers;
 use CodeIgniter\Config\Factories;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Shield\Authentication\Actions\Email2FA;
+use CodeIgniter\Shield\Models\UserIdentityModel;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
-use CodeIgniter\Shield\Models\UserIdentityModel;
 use Tests\Support\FakeUser;
 use Tests\Support\TestCase;
 

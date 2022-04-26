@@ -8,12 +8,12 @@ use CodeIgniter\Shield\Authentication\Handlers\Session;
 use CodeIgniter\Shield\Config\Auth;
 use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Models\RememberModel;
+use CodeIgniter\Shield\Models\UserIdentityModel;
 use CodeIgniter\Shield\Models\UserModel;
 use CodeIgniter\Shield\Result;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\Mock\MockEvents;
 use Config\Services;
-use CodeIgniter\Shield\Models\UserIdentityModel;
 use Tests\Support\FakeUser;
 use Tests\Support\TestCase;
 

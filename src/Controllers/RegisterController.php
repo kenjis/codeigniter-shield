@@ -8,8 +8,8 @@ use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Interfaces\Authenticatable;
 use CodeIgniter\Shield\Interfaces\UserProvider;
-use CodeIgniter\Validation\Validation;
 use CodeIgniter\Shield\Models\UserIdentityModel;
+use CodeIgniter\Validation\Validation;
 
 /**
  * Class RegisterController

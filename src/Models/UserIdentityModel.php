@@ -3,10 +3,10 @@
 namespace CodeIgniter\Shield\Models;
 
 use CodeIgniter\Model;
+use CodeIgniter\Shield\Authentication\Passwords;
 use CodeIgniter\Shield\Entities\AccessToken;
 use CodeIgniter\Shield\Entities\UserIdentity;
 use Faker\Generator;
-use CodeIgniter\Shield\Authentication\Passwords;
 
 class UserIdentityModel extends Model
 {
