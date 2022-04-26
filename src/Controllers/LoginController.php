@@ -65,8 +65,6 @@ class LoginController extends BaseController
      */
     public function logoutAction()
     {
-        $user = auth()->user();
-
         auth()->logout();
 
         return redirect()->to(config('Auth')->logoutRedirect());
