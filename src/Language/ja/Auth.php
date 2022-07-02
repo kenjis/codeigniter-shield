@@ -4,7 +4,7 @@ namespace CodeIgniter\Shield\Language\ja;
 
 return [
     // Exceptions
-    'unknownAuthenticator'  => '{0} は有効なオーセンティケーターではありません。', // '{0} is not a valid authenticator.',
+    'unknownAuthenticator'  => 'xxx{0} は有効なオーセンティケーターではありません。', // '{0} is not a valid authenticator.',
     'unknownUserProvider'   => '使用するユーザープロバイダーを決定できません。', // 'Unable to determine the User Provider to use.',
     'invalidUser'           => '指定されたユーザーを見つけることができません。', // 'Unable to locate the specified user.',
     'badAttempt'            => 'ログインできません。認証情報を確認してください。', // 'Unable to log you in. Please check your credentials.',
